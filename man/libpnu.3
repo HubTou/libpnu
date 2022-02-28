@@ -1,0 +1,86 @@
+.Dd February 28, 2022
+.Dt LIBPNU 3
+.Os
+.Sh NAME
+.Nm libpnu
+.Nd Common utility functions for the PNU project
+.Sh SYNOPSIS
+.Em import libpnu
+.Pp
+.Fo libpnu.initialize_debugging
+.Fa "String program_name"
+.Fc
+.Fo libpnu.handle_interrupt_signals
+.Fa "Function handler_function"
+.Fc
+.Ft List
+.Fo libpnu.locate_directory
+.Fa "String directory"
+.Fc
+.Sh DESCRIPTION
+The
+.Fn initialize_debugging
+function sets up the Python logging module with a syslog style kind of console log using
+.Fa program_name
+as the program name.
+By default, the logging level is set at WARNING or more, but can be lowered by calling
+.Fn logging.disable ,
+for example with the logging.NOTSET parameter to get DEBUG or more logging level.
+.Pp
+The
+.Fn handle_interrupt_signals
+function calls the specified
+.Fa handler_function
+to process the SIGINT and SIGPIPE signals,
+usually to avoid an ugly trace dump to the console
+in case of interrupt (Control-C pressed or broken pipe).
+.Pp
+The
+.Fn locate_directory
+function searches the specified
+.Fa directory
+in a variety of possible other directories,
+depending on the operating system used (Unix, Windows)
+and the fact that a package can be user or system installed.
+It is intended to be used when the directory can't be directly found,
+and returns a list of paths where the directory searched has been found.
+.Pp
+For example, if the argument is
+.Pa "/usr/local/etc/man.d" ,
+we'll search for "usr/local/etc/man.d", "local/etc/man.d", "etc/man.d" (more likely) and "man.d"
+in a list of user's local Python package directories
+("$HOME/.local" on Unix, "$APPDATA/python", "$HOMEPATH/appdata/roaming/python", "$USERPROFILE/appdata/roaming/python" on Windows)
+and system wide Python package base directories (given by
+.Em sys.base_prefix :
+"/usr/local" on Unix, "C:/Program Files/Python3x" on Windows).
+.Sh ENVIRONMENT
+The following environment variables can be used to identify the user identity and home directory.
+.Pp
+On Unix:
+.Ev HOME ,
+.Ev LOGNAME ,
+.Ev USER ,
+.Ev LNAME
+and
+.Ev USERNAME .
+.Pp
+On Windows:
+.Ev APPDATA ,
+.Ev HOMEPATH
+and
+.Ev USERPROFILE .
+.Sh STANDARDS
+The
+.Nm
+library is not a standard UNIX one.
+.Pp
+It tries to follow the PEP 8 style guide for Python code.
+.Sh PORTABILITY
+To be tested under Windows.
+.Sh HISTORY
+This library was made for the
+.Lk https://github.com/HubTou/PNU [PNU project]
+.Sh LICENSE
+It is available under the 3-clause BSD license.
+.Sh AUTHORS
+.An Hubert Tournier
