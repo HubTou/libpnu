@@ -1,4 +1,4 @@
-.Dd February 28, 2022
+.Dd March 27, 2022
 .Dt LIBPNU 3
 .Os
 .Sh NAME
@@ -12,6 +12,9 @@
 .Fc
 .Fo libpnu.handle_interrupt_signals
 .Fa "Function handler_function"
+.Fc
+.Ft String
+.Fo libpnu.get_home_directory
 .Fc
 .Ft List
 .Fo libpnu.locate_directory
@@ -34,6 +37,11 @@ function calls the specified
 to process the SIGINT and SIGPIPE signals,
 usually to avoid an ugly trace dump to the console
 in case of interrupt (Control-C pressed or broken pipe).
+.Pp
+The
+.Fn get_home_directory
+function returns the location of the user's home directory in a string
+depending on the operating system used (Unix, Windows).
 .Pp
 The
 .Fn locate_directory
@@ -66,6 +74,7 @@ and
 .Pp
 On Windows:
 .Ev APPDATA ,
+.Ev HOME ,
 .Ev HOMEPATH
 and
 .Ev USERPROFILE .

@@ -12,7 +12,7 @@ import signal
 import sys
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.0.0 (February 28, 2022) by Hubert Tournier $"
+ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.1.0 (March 27, 2022) by Hubert Tournier $"
 
 
 ################################################################################
@@ -28,6 +28,34 @@ def handle_interrupt_signals(handler_function):
     """Process interrupt signals"""
     signal.signal(signal.SIGINT, handler_function)
     signal.signal(signal.SIGPIPE, handler_function)
+
+
+################################################################################
+def get_home_directory():
+    """Return the path to the user's home directory"""
+    home_directory = ""
+    if os.name == "posix":
+        if "HOME" in os.environ:
+            if os.path.isdir(os.environ["HOME"]):
+                home_directory = os.environ["HOME"]
+        else:
+            user = getpass.getuser()
+            if user:
+                if os.path.isdir(pwd.getpwnam(user)[5]):
+                    home_directory = pwd.getpwnam(user)[5]
+
+    elif os.name == "nt":
+        if "HOME" in os.environ:
+            if os.path.isdir(os.environ["HOME"]):
+                home_directory = os.environ["HOME"]
+        elif "HOMEPATH" in os.environ:
+            if os.path.isdir(os.environ["HOMEPATH"]):
+                home_directory = os.environ["HOMEPATH"]
+        elif "USERPROFILE" in os.environ:
+            if os.path.isdir(os.environ["USERPROFILE"]):
+                home_directory = os.environ["USERPROFILE"]
+
+    return home_directory
 
 
 ################################################################################

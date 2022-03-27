@@ -13,6 +13,8 @@ import **libpnu**
 
 *libpnu*.**handle_interrupt_signals**(Function *handler_function*)
 
+String *libpnu*.**get_home_directory**()
+
 List *libpnu*.**locate_directory**(String *directory*)
 
 ## DESCRIPTION
@@ -22,6 +24,9 @@ for example with the *logging.NOTSET* parameter to get DEBUG or more logging lev
 
 The **handle_interrupt_signals()** function calls the specified *handler_function* to process the SIGINT and SIGPIPE signals,
 usually to avoid an ugly trace dump to the console in case of interrupt (Control-C pressed or broken pipe).
+
+The **get_home_directory()** function returns the location of the user's home directory in a string
+depending on the operating system used (Unix, Windows).
 
 The **locate_directory()** function searches the specified *directory* in a variety of possible other directories,
 depending on the operating system used (Unix, Windows) and the fact that a package can be user or system installed.
@@ -37,7 +42,7 @@ The following environment variables can be used to identify the user identity an
 
 On Unix: *HOME*, *LOGNAME*, *USER*, *LNAME* and *USERNAME*.
 
-On Windows: *APPDATA*, *HOMEPATH* and *USERPROFILE*.
+On Windows: *APPDATA*, *HOME*, *HOMEPATH* and *USERPROFILE*.
 
 ## STANDARDS
 The **libpnu** library is not a standard UNIX one.
