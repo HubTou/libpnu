@@ -13,7 +13,7 @@ import signal
 import sys
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.1.1 (December 17, 2022) by Hubert Tournier $"
+ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.1.2 (December 17, 2022) by Hubert Tournier $"
 
 
 ################################################################################
@@ -28,7 +28,8 @@ def initialize_debugging(program_name):
 def handle_interrupt_signals(handler_function):
     """Process interrupt signals"""
     signal.signal(signal.SIGINT, handler_function)
-    signal.signal(signal.SIGPIPE, handler_function)
+    if os.name == "posix":
+        signal.signal(signal.SIGPIPE, handler_function)
 
 
 ################################################################################
