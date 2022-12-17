@@ -7,12 +7,13 @@ Author: Hubert Tournier
 import getpass
 import logging
 import os
-import pwd
+if os.name == "posix":
+    import pwd
 import signal
 import sys
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.1.0 (March 27, 2022) by Hubert Tournier $"
+ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.1.1 (December 17, 2022) by Hubert Tournier $"
 
 
 ################################################################################
