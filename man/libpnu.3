@@ -1,4 +1,4 @@
-.Dd December 17, 2022
+.Dd May 8, 2023
 .Dt LIBPNU 3
 .Os
 .Sh NAME
@@ -16,9 +16,17 @@
 .Ft String
 .Fo libpnu.get_home_directory
 .Fc
+.Ft String
+.Fo libpnu.get_caching_directory
+.Fa "String name"
+.Fc
 .Ft List
 .Fo libpnu.locate_directory
 .Fa "String directory"
+.Fc
+.Ft List
+.Fo libpnu.load_strings_from_file
+.Fa "String filename"
 .Fc
 .Sh DESCRIPTION
 The
@@ -44,6 +52,14 @@ function returns the location of the user's home directory in a string
 depending on the operating system used (Unix, Windows).
 .Pp
 The
+.Fn get_caching_directory
+function returns the location of a user writable directory for caching files in a string
+depending on the operating system used (Unix, Windows).
+The provided
+.Fa name
+will be the last directory part of this location.
+.Pp
+The
 .Fn locate_directory
 function searches the specified
 .Fa directory
@@ -61,21 +77,32 @@ in a list of user's local Python package directories
 and system wide Python package base directories (given by
 .Em sys.base_prefix :
 "/usr/local" on Unix, "C:/Program Files/Python3x" on Windows).
+.Pp
+The
+.Fn load_strings_from_file
+function returns a list of strings from the given
+.Fa filename ,
+filtering out blank or commented lines, as well as end-of-line comments (with '#' being the comment character).
 .Sh ENVIRONMENT
-The following environment variables can be used to identify the user identity and home directory.
+The following environment variables can be used to identify the user identity and home directory,
+or find a caching directory.
 .Pp
 On Unix:
 .Ev HOME ,
+.Ev LNAME ,
 .Ev LOGNAME ,
-.Ev USER ,
-.Ev LNAME
+.Ev TMP ,
+.Ev TMPDIR ,
+.Ev USER
 and
 .Ev USERNAME .
 .Pp
 On Windows:
 .Ev APPDATA ,
 .Ev HOME ,
-.Ev HOMEPATH
+.Ev HOMEPATH ,
+.Ev LOCALAPPDATA ,
+.Ev TMP
 and
 .Ev USERPROFILE .
 .Sh STANDARDS
@@ -85,7 +112,7 @@ library is not a standard UNIX one.
 .Pp
 It tries to follow the PEP 8 style guide for Python code.
 .Sh PORTABILITY
-To be tested under Windows.
+Tested OK under Windows.
 .Sh HISTORY
 This library was made for the
 .Lk https://github.com/HubTou/PNU [PNU project]

@@ -1,5 +1,4 @@
 NAME=libpnu
-SECTION=3
 SOURCES=src/${NAME}/__init__.py src/${NAME}/main.py
 
 # Default action is to show this help message:
@@ -44,10 +43,10 @@ format: /usr/local/bin/black
 love:
 	@echo "Not war!"
 
-man/${NAME}.${SECTION}.gz: man/${NAME}.${SECTION}
-	@gzip -k9c man/${NAME}.${SECTION} > man/${NAME}.${SECTION}.gz
+man/${NAME}.3.gz: man/${NAME}.3
+	@gzip -k9c man/${NAME}.3 > man/${NAME}.3.gz
 
-package: man/${NAME}.${SECTION}.gz # src/${NAME}/po/en/${NAME}.mo src/${NAME}/po/fr/${NAME}.mo
+package: man/${NAME}.3.gz
 	python -m build
 
 upload-test:
@@ -57,5 +56,5 @@ upload:
 	python -m twine upload dist/*
 
 distclean:
-	rm -rf build dist src/*.egg-info man/${NAME}.${SECTION}.gz
+	rm -rf build dist src/*.egg-info man/${NAME}.3.gz
 

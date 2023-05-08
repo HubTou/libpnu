@@ -1,5 +1,5 @@
 # Installation
-pip install [pnu-libpnu](https://pypi.org/project/pnu-libpnu/)
+This library will be installed as a dependency by other PNU utilities.
 
 # LIBPNU(3)
 
@@ -15,7 +15,11 @@ import **libpnu**
 
 String *libpnu*.**get_home_directory**()
 
+String *libpnu*.**get_caching_directory**(String *name*)
+
 List *libpnu*.**locate_directory**(String *directory*)
+
+List *libpnu*.**load_strings_from_file**(String *filename*)
 
 ## DESCRIPTION
 The **initialize_debugging()** function sets up the Python logging module with a syslog style kind of console log using *program_name* as the program name.
@@ -28,6 +32,10 @@ usually to avoid an ugly trace dump to the console in case of interrupt (Control
 The **get_home_directory()** function returns the location of the user's home directory in a string
 depending on the operating system used (Unix, Windows).
 
+The **get_caching_directory()** function returns the location of a user writable directory for caching files in a string
+depending on the operating system used (Unix, Windows).
+The provided *name* will be the last directory part of this location.
+
 The **locate_directory()** function searches the specified *directory* in a variety of possible other directories,
 depending on the operating system used (Unix, Windows) and the fact that a package can be user or system installed.
 It is intended to be used when the directory can't be directly found, and returns a list of paths where the directory searched has been found.
@@ -37,12 +45,16 @@ in a list of user's local Python package directories
 ("$HOME/.local" on Unix, "$APPDATA/python", "$HOMEPATH/appdata/roaming/python", "$USERPROFILE/appdata/roaming/python" on Windows)
 and system wide Python package base directories (given by *sys.base_prefix*: "/usr/local" on Unix, "C:/Program Files/Python3x" on Windows).
 
+The **load_strings_from_file()** function returns a list of strings from the given *filename*,
+filtering out blank or commented lines, as well as end-of-line comments (with '#' being the comment character).
+
 ## ENVIRONMENT
-The following environment variables can be used to identify the user identity and home directory.
+The following environment variables can be used to identify the user identity and home directory,
+or find a caching directory.
 
-On Unix: *HOME*, *LOGNAME*, *USER*, *LNAME* and *USERNAME*.
+On Unix: *HOME*, *LNAME*, *LOGNAME*, *TMP*, *TMPDIR*, *USER* and *USERNAME*.
 
-On Windows: *APPDATA*, *HOME*, *HOMEPATH* and *USERPROFILE*.
+On Windows: *APPDATA*, *HOME*, *HOMEPATH*, *LOCALAPPDATA*, *TMP* and *USERPROFILE*.
 
 ## STANDARDS
 The **libpnu** library is not a standard UNIX one.
@@ -50,7 +62,7 @@ The **libpnu** library is not a standard UNIX one.
 It tries to follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guide for [Python](https://www.python.org/) code.
 
 ## PORTABILITY
-To be tested under Windows.
+Tested OK under Windows.
 
 ## HISTORY
 This library was made for the [PNU project](https://github.com/HubTou/PNU).
