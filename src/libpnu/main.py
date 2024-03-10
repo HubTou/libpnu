@@ -15,28 +15,29 @@ if os.name == "posix":
     import pwd
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.2.0 (May 8, 2023) by Hubert Tournier $"
+ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.2.1 (March 10, 2024) by Hubert Tournier $"
 
 
-################################################################################
+####################################################################################################
 def initialize_debugging(program_name):
-    """ Set up debugging """
+    """ Sets up debugging """
     console_log_format = program_name + ": %(levelname)s: %(message)s"
     logging.basicConfig(format=console_log_format, level=logging.DEBUG)
+    # Only log entries of level WARNING, ERROR or CRITICAL will be shown by default
     logging.disable(logging.INFO)
 
 
-################################################################################
+####################################################################################################
 def handle_interrupt_signals(handler_function):
-    """ Process interrupt signals """
+    """ Processes interrupt signals """
     signal.signal(signal.SIGINT, handler_function)
     if os.name == "posix":
         signal.signal(signal.SIGPIPE, handler_function)
 
 
-################################################################################
+####################################################################################################
 def get_home_directory():
-    """ Return the path to the user's home directory """
+    """ Returns the path to the user's home directory """
     home_directory = ""
 
     if os.name == "posix":
@@ -65,35 +66,35 @@ def get_home_directory():
 
 ####################################################################################################
 def get_caching_directory(name):
-    """ Find and create a directory to save cached files """
-    directory = ''
+    """ Finds and creates a directory to save cached files """
+    directory = ""
 
-    if os.name == 'nt':
-        if 'LOCALAPPDATA' in os.environ:
-            directory = os.environ['LOCALAPPDATA'] + os.sep + "cache" + os.sep + name
-        elif 'TMP' in os.environ:
-            directory = os.environ['TMP'] + os.sep + "cache" + os.sep + name
+    if os.name == "nt":
+        if "LOCALAPPDATA" in os.environ:
+            directory = os.environ["LOCALAPPDATA"] + os.sep + "cache" + os.sep + name
+        elif "TMP" in os.environ:
+            directory = os.environ["TMP"] + os.sep + "cache" + os.sep + name
 
     else: # os.name == 'posix':
-        if 'HOME' in os.environ:
-            directory = os.environ['HOME'] + os.sep + ".cache" + os.sep + name
-        elif 'TMPDIR' in os.environ:
-            directory = os.environ['TMPDIR'] + os.sep + ".cache" + os.sep + name
-        elif 'TMP' in os.environ:
-            directory = os.environ['TMP'] + os.sep + ".cache" + os.sep + name
+        if "HOME" in os.environ:
+            directory = os.environ["HOME"] + os.sep + ".cache" + os.sep + name
+        elif "TMPDIR" in os.environ:
+            directory = os.environ["TMPDIR"] + os.sep + ".cache" + os.sep + name
+        elif "TMP" in os.environ:
+            directory = os.environ["TMP"] + os.sep + ".cache" + os.sep + name
 
     if directory:
         try:
             os.makedirs(directory, exist_ok=True)
         except OSError:
-            directory = ''
+            directory = ""
 
     return directory
 
 
-################################################################################
+####################################################################################################
 def locate_directory(directory):
-    """ Return a list of paths containing the specified directory """
+    """ Returns a list of paths containing the specified directory """
     directories_list = []
 
     parts = []
@@ -152,18 +153,28 @@ def locate_directory(directory):
     return directories_list
 
 
-################################################################################
+####################################################################################################
 def load_strings_from_file(filename):
-    """ Load a list of strings from a file filtering out blank or commented lines """
+    """ Loads a list of strings from a file filtering out comments and empty lines """
     lines = []
+    strings = []
 
     if os.path.isfile(filename):
-        with open(filename, encoding='utf-8', errors='ignore') as file:
+        with open(filename, encoding="utf-8", errors="ignore") as file:
             lines = file.read().splitlines()
 
-    # Return all non empty lines not starting with a '#' comment character
-    # Also strip comments at the end of lines
-    return [re.sub(r"[ 	]*#.*", "", line) for line in lines if line and not line.startswith('#')]
+    # Remove comments (unless the comment character is escaped):
+    for line in lines:
+        line = line.strip()
+        line = re.sub(r"\\#", "²", line) # horrible kludge!
+        line = re.sub(r"[ 	]*#.*", "", line) # remove comments
+        line = re.sub(r"²", "\\#", line)
+
+        # Only return non empty lines:
+        if line:
+            strings.append(line)
+
+    return strings
 
 
 if __name__ == "__main__":
