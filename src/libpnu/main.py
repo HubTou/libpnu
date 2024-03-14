@@ -15,7 +15,7 @@ if os.name == "posix":
     import pwd
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.2.1 (March 10, 2024) by Hubert Tournier $"
+ID = "@(#) $Id: libpnu - Common utility functions for the PNU project v1.3.0 (March 13, 2024) by Hubert Tournier $"
 
 
 ####################################################################################################
@@ -33,6 +33,13 @@ def handle_interrupt_signals(handler_function):
     signal.signal(signal.SIGINT, handler_function)
     if os.name == "posix":
         signal.signal(signal.SIGPIPE, handler_function)
+
+
+####################################################################################################
+def interrupt_handler_function(signal_number, current_stack_frame):
+    """ Default handler_function for handle_interrupt_signals() """
+    print(" Interrupted!\n", file=sys.stderr)
+    sys.exit(0)
 
 
 ####################################################################################################
@@ -164,15 +171,24 @@ def load_strings_from_file(filename):
             lines = file.read().splitlines()
 
     # Remove comments (unless the comment character is escaped):
+    previous_lines = ""
     for line in lines:
         line = line.strip()
         line = re.sub(r"\\#", "²", line) # horrible kludge!
         line = re.sub(r"[ 	]*#.*", "", line) # remove comments
         line = re.sub(r"²", "\\#", line)
+        line = previous_lines + line
+        previous_lines = ""
 
         # Only return non empty lines:
         if line:
-            strings.append(line)
+            if line.endswith("\\"): # Continued line
+                previous_lines = line[:-1]
+            else:
+                strings.append(line)
+
+    if previous_lines:
+        strings.append(previous_lines.strip())
 
     return strings
 

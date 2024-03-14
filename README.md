@@ -1,7 +1,7 @@
 # Installation
 This library will be installed as a dependency by other PNU utilities.
 
-# LIBPNU(3)
+# LibPNU(3)
 
 ## NAME
 libpnu — Common utility functions for the PNU project
@@ -12,6 +12,8 @@ import **libpnu**
 *libpnu*.**initialize_debugging**(String *program_name*)
 
 *libpnu*.**handle_interrupt_signals**(Function *handler_function*)
+
+*libpnu*.**interrupt_handler_function**(Int *signal_number*, FrameObject *current_stack_frame*)
 
 String *libpnu*.**get_home_directory**()
 
@@ -28,6 +30,8 @@ for example with the *logging.NOTSET* parameter to get DEBUG or more logging lev
 
 The **handle_interrupt_signals()** function calls the specified *handler_function* to process the SIGINT and SIGPIPE signals,
 usually to avoid an ugly trace dump to the console in case of interrupt (Control-C pressed or broken pipe).
+If all you want is printing an "Interrupted" English message and exit your program,
+then you can use the **interrupt_handler_function()** as the *handler_function*.
 
 The **get_home_directory()** function returns the location of the user's home directory in a string
 depending on the operating system used (Unix, Windows).
@@ -46,7 +50,8 @@ in a list of user's local Python package directories
 and system wide Python package base directories (given by *sys.base_prefix*: "/usr/local" on Unix, "C:/Program Files/Python3x" on Windows).
 
 The **load_strings_from_file()** function returns a list of strings from the given *filename*,
-filtering out blank or commented lines, as well as end-of-line comments (with '#' being the comment character).
+filtering out comments and empty lines (with '#' being the comment character),
+and joining continued lines (those ending with a '\\' character).
 
 ## ENVIRONMENT
 The following environment variables can be used to identify the user identity and home directory,
@@ -63,6 +68,8 @@ It tries to follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style 
 
 ## PORTABILITY
 Tested OK under Windows.
+
+Packaged for FreeBSD as *pyXX-pnu-libpnu*.
 
 ## HISTORY
 This library was made for the [PNU project](https://github.com/HubTou/PNU).

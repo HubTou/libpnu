@@ -1,4 +1,4 @@
-.Dd May 8, 2023
+.Dd March 13, 2023
 .Dt LIBPNU 3
 .Os
 .Sh NAME
@@ -12,6 +12,10 @@
 .Fc
 .Fo libpnu.handle_interrupt_signals
 .Fa "Function handler_function"
+.Fc
+.Fo libpnu.interrupt_handler_function
+.Fa "Int signal_number"
+.Fa "FrameObject current_stack_frame"
 .Fc
 .Ft String
 .Fo libpnu.get_home_directory
@@ -44,7 +48,12 @@ function calls the specified
 .Fa handler_function
 to process the SIGINT and SIGPIPE signals,
 usually to avoid an ugly trace dump to the console
-in case of interrupt (Control-C pressed or broken pipe).
+in case of interrupt (Control\-C pressed or broken pipe).
+If all you want is printing an "Interrupted" English message and exit your program,
+then you can use the
+.Fn interrupt_handler_function
+as the
+.Em handler_function .
 .Pp
 The
 .Fn get_home_directory
@@ -82,7 +91,8 @@ The
 .Fn load_strings_from_file
 function returns a list of strings from the given
 .Fa filename ,
-filtering out blank or commented lines, as well as end-of-line comments (with '#' being the comment character).
+filtering out comments and empty lines (with '#' being the comment character),
+and joining continued lines (those ending with a '\\' character).
 .Sh ENVIRONMENT
 The following environment variables can be used to identify the user identity and home directory,
 or find a caching directory.
@@ -113,10 +123,15 @@ library is not a standard UNIX one.
 It tries to follow the PEP 8 style guide for Python code.
 .Sh PORTABILITY
 Tested OK under Windows.
+.Pp
+Packaged for
+.Fx
+as
+.Em pyXX\-pnu\-libpnu .
 .Sh HISTORY
 This library was made for the
 .Lk https://github.com/HubTou/PNU [PNU project]
 .Sh LICENSE
-It is available under the 3-clause BSD license.
+It is available under the 3\-clause BSD license.
 .Sh AUTHORS
 .An Hubert Tournier
